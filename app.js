@@ -433,10 +433,12 @@ function renderSterilizerCards() {
             <div class="sterilizer-stat-value" style="font-size:13px;">${s.eta}</div>
           </div>
         </div>
-        <button class="btn btn-primary" style="width:100%;" onclick="startSterilize(${s.id})">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          進行滅菌
-        </button>
+        ${s.status === '運作中'
+          ? `<button class="btn btn-primary" style="width:100%;" onclick="showToast('滅菌鍋 #${s.id} 運作中，預計 ${s.eta} 完成')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>運作中 — ${s.eta}完成</button>`
+          : s.status === '待檢驗'
+          ? `<button class="btn btn-success" style="width:100%;" onclick="showToast('已送出檢驗確認，請等待結果')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v11m0 0H5m4 0h10"/></svg>進行滅菌後檢驗</button>`
+          : `<button class="btn btn-primary" style="width:100%;" onclick="startSterilize(${s.id})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>開始滅菌</button>`
+        }
       </div>
     `;
   }).join('');
