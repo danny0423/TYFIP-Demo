@@ -386,10 +386,13 @@ function openWashModal(id) {
   `).join('');
 
   const btn = document.getElementById('confirm-wash-btn');
+  const doneTag = document.getElementById('modal-done-tag');
   if (batch.status === '已完成') {
     btn.style.display = 'none';
+    if (doneTag) doneTag.style.display = 'inline-flex';
   } else {
     btn.style.display = 'inline-flex';
+    if (doneTag) doneTag.style.display = 'none';
   }
 
   document.getElementById('wash-modal').classList.add('active');
