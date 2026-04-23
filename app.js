@@ -393,6 +393,7 @@ function confirmWash() {
   renderWashTable();
   showToast('已確認完成清洗：' + currentWashBatch.id);
   DEMO_DATA.dashboard.kpi.wash = Math.max(0, DEMO_DATA.dashboard.kpi.wash - 1);
+  DEMO_DATA.dashboard.kpi.package += 1;
   renderKPI();
 }
 
