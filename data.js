@@ -7,12 +7,23 @@ const DEMO_DATA = {
       wash: 47, package: 23, sterilizer: 18, inspect: 5,
       stockIn: 12, expire: 8, stockOut: 34, damage: 2
     },
-    chart_monthly: Array.from({ length: 30 }, (_, i) => ({
-      day: i + 1,
-      wash: Math.floor(Math.random() * 60) + 20,
-      sterilize: Math.floor(Math.random() * 50) + 15,
-      stockOut: Math.floor(Math.random() * 40) + 10
-    })),
+    chart_monthly: [
+      { day:1,  wash:52, sterilize:41, stockOut:28 }, { day:2,  wash:45, sterilize:38, stockOut:22 },
+      { day:3,  wash:58, sterilize:47, stockOut:31 }, { day:4,  wash:43, sterilize:35, stockOut:19 },
+      { day:5,  wash:61, sterilize:50, stockOut:35 }, { day:6,  wash:37, sterilize:29, stockOut:14 },
+      { day:7,  wash:40, sterilize:32, stockOut:17 }, { day:8,  wash:55, sterilize:44, stockOut:29 },
+      { day:9,  wash:63, sterilize:52, stockOut:38 }, { day:10, wash:48, sterilize:40, stockOut:24 },
+      { day:11, wash:57, sterilize:46, stockOut:32 }, { day:12, wash:44, sterilize:36, stockOut:21 },
+      { day:13, wash:39, sterilize:31, stockOut:16 }, { day:14, wash:66, sterilize:54, stockOut:40 },
+      { day:15, wash:50, sterilize:42, stockOut:26 }, { day:16, wash:59, sterilize:48, stockOut:33 },
+      { day:17, wash:46, sterilize:37, stockOut:23 }, { day:18, wash:53, sterilize:43, stockOut:27 },
+      { day:19, wash:41, sterilize:33, stockOut:18 }, { day:20, wash:67, sterilize:55, stockOut:42 },
+      { day:21, wash:38, sterilize:30, stockOut:15 }, { day:22, wash:60, sterilize:49, stockOut:36 },
+      { day:23, wash:47, sterilize:39, stockOut:25 }, { day:24, wash:54, sterilize:45, stockOut:30 },
+      { day:25, wash:62, sterilize:51, stockOut:37 }, { day:26, wash:49, sterilize:41, stockOut:27 },
+      { day:27, wash:44, sterilize:36, stockOut:20 }, { day:28, wash:56, sterilize:47, stockOut:33 },
+      { day:29, wash:51, sterilize:43, stockOut:28 }, { day:30, wash:47, sterilize:39, stockOut:24 }
+    ],
     chart_distribution: [
       { label: '供應室', value: 35, color: '#3B82F6' },
       { label: 'B棟手術室', value: 28, color: '#10B981' },
