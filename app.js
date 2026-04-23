@@ -171,14 +171,14 @@ function renderDashboardSubtitle() {
 
 // ====== KPI CARDS ======
 const KPI_CONFIG = [
-  { key: 'wash',      label: '待清洗器械數', color: '#3B82F6', bg: '#EFF6FF', icon: 'droplets' },
-  { key: 'package',   label: '待包配盤包數', color: '#06B6D4', bg: '#ECFEFF', icon: 'package' },
-  { key: 'sterilizer',label: '待滅菌盤包數', color: '#F59E0B', bg: '#FFF7ED', icon: 'shield' },
-  { key: 'inspect',   label: '待檢驗批數',   color: '#EF4444', bg: '#FEF2F2', icon: 'flask-conical' },
-  { key: 'stockIn',   label: '待入庫盤包數', color: '#10B981', bg: '#ECFDF5', icon: 'inbox' },
-  { key: 'expire',    label: '即將過期盤包數',color: '#F59E0B', bg: '#FFFBEB', icon: 'alert-triangle' },
-  { key: 'stockOut',  label: '今日出庫數',   color: '#8B5CF6', bg: '#F5F3FF', icon: 'truck' },
-  { key: 'damage',    label: '器械損壞通報', color: '#DC2626', bg: '#FFF1F2', icon: 'wrench' }
+  { key: 'wash',      label: '待清洗器械數',  color: '#3B82F6', bg: '#EFF6FF', icon: 'droplets',       page: 'wash' },
+  { key: 'package',   label: '待包配盤包數',  color: '#06B6D4', bg: '#ECFEFF', icon: 'package',        page: 'pack-manage' },
+  { key: 'sterilizer',label: '待滅菌盤包數',  color: '#F59E0B', bg: '#FFF7ED', icon: 'shield',         page: 'sterilize' },
+  { key: 'inspect',   label: '待檢驗批數',    color: '#EF4444', bg: '#FEF2F2', icon: 'flask-conical',   page: 'sterilize-check' },
+  { key: 'stockIn',   label: '待入庫盤包數',  color: '#10B981', bg: '#ECFDF5', icon: 'inbox',          page: 'storage' },
+  { key: 'expire',    label: '即將過期盤包數', color: '#F59E0B', bg: '#FFFBEB', icon: 'alert-triangle', page: 'storage' },
+  { key: 'stockOut',  label: '今日出庫數',    color: '#8B5CF6', bg: '#F5F3FF', icon: 'truck',          page: 'stockout' },
+  { key: 'damage',    label: '器械損壞通報',  color: '#DC2626', bg: '#FFF1F2', icon: 'wrench',         page: 'damage' }
 ];
 
 const ICONS = {
@@ -192,11 +192,28 @@ const ICONS = {
   'wrench': '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>'
 };
 
+function kpiNavTo(page) {
+  const target = document.querySelector(`.nav-item[data-page="${page}"], .nav-sub-item[data-page="${page}"]`);
+  if (target) {
+    navTo(target, page);
+    if (target.classList.contains('nav-sub-item')) {
+      const sub = target.closest('.nav-sub');
+      if (sub) sub.classList.add('open');
+      const parentNav = sub?.previousElementSibling;
+      if (parentNav?.classList.contains('nav-item')) parentNav.classList.add('open');
+    }
+  } else {
+    document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+    const pg = document.getElementById('page-' + page);
+    if (pg) pg.classList.add('active');
+  }
+}
+
 function renderKPI() {
   const kpi = DEMO_DATA.dashboard.kpi;
   const grid = document.getElementById('kpi-grid');
   grid.innerHTML = KPI_CONFIG.map(c => `
-    <div class="kpi-card">
+    <div class="kpi-card" style="cursor:pointer;" onclick="kpiNavTo('${c.page}')" title="前往${c.label}">
       <div class="kpi-icon" style="background:${c.bg}; color:${c.color};">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">${ICONS[c.icon]}</svg>
       </div>
