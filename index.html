@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SISS 2.0 — 盤包與器械追溯系統</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    #login-page { display: flex; }
+    #main-page { display: none; }
+  </style>
+</head>
+<body>
+
+<!-- ===== LOGIN PAGE ===== -->
+<div id="login-page">
+  <div class="login-brand">
+    <div class="login-brand-inner">
+      <div class="brand-logo">SI</div>
+      <div class="brand-title">TRIPLE A MEDTECH</div>
+      <div class="brand-version">SISS 2.0</div>
+      <div style="color:rgba(255,255,255,0.5); font-size:14px; line-height:1.8; letter-spacing:0.5px;">盤包與器械追溯系統</div>
+      <div style="margin-top:20px; color:rgba(255,255,255,0.4); font-size:12px; font-style:italic;">從清洗到手術，每一步都有跡可循</div>
+      <div class="login-dots">
+        <div class="login-dot"></div>
+        <div class="login-dot"></div>
+        <div class="login-dot"></div>
+      </div>
+    </div>
+
+    <!-- decorative floating cards -->
+    <div style="position:absolute; bottom:80px; left:30px; background:rgba(255,255,255,0.08); backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:12px 16px; color:white; font-size:12px;">
+      <div style="opacity:0.5; font-size:10px; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">今日滅菌批次</div>
+      <div style="font-size:22px; font-weight:700;">8 <span style="font-size:12px; font-weight:400; opacity:0.6">批</span></div>
+    </div>
+    <div style="position:absolute; top:80px; right:30px; background:rgba(255,255,255,0.08); backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:12px 16px; color:white; font-size:12px;">
+      <div style="opacity:0.5; font-size:10px; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">追溯覆蓋率</div>
+      <div style="font-size:22px; font-weight:700;">99.8<span style="font-size:12px; font-weight:400; opacity:0.6">%</span></div>
+    </div>
+  </div>
+
+  <div class="login-form-side">
+    <div class="login-form-box">
+      <div class="login-welcome">歡迎登入</div>
+      <div class="login-sub">請輸入您的帳號與密碼繼續</div>
+
+      <div class="form-group">
+        <label class="form-label">帳號</label>
+        <input class="form-input" type="text" placeholder="請輸入帳號" id="login-account" value="admin">
+      </div>
+      <div class="form-group">
+        <label class="form-label">密碼</label>
+        <input class="form-input" type="password" placeholder="請輸入密碼" id="login-password" value="••••••••">
+      </div>
+
+      <button class="btn-login" onclick="doLogin()" id="login-btn">登入系統</button>
+
+      <div style="margin-top:24px; padding:14px 16px; background:#F0F7FF; border-radius:10px; border-left:3px solid #3B82F6;">
+        <div style="font-size:11px; font-weight:700; color:#2563EB; margin-bottom:4px;">DEMO 模式</div>
+        <div style="font-size:12px; color:#64748B;">任何帳密均可直接登入，預設身分為供應室管理員</div>
+      </div>
+    </div>
+
+    <div class="login-footer">© 2025 TripleA MedTech — All Rights Reserved</div>
+  </div>
+</div>
+
+<!-- ===== MAIN PAGE ===== -->
+<div id="main-page">
+  <div class="layout">
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-icon">SI</div>
+        <span class="sidebar-logo-text">SISS 2.0</span>
+      </div>
+
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebar-avatar">王</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="sidebar-name">王小明</div>
+          <div class="sidebar-user-role">供應室管理員</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav" id="sidebar-nav">
+        <div class="nav-section-label">即時資訊</div>
+        <div class="nav-item active" onclick="navTo(this,'dashboard')" data-page="dashboard">
+          <svg class="nav-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+          <span class="nav-item-text">首頁儀表板</span>
+        </div>
+
+        <div class="nav-section-label">供應室功能</div>
+
+        <!-- 清洗區 -->
+        <div class="nav-item" onclick="toggleSub(this,'sub-wash')">
+          <svg class="nav-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.8-4-4-6.5c-.3 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg>
+          <span class="nav-item-text">清洗區</span>
+          <svg class="nav-item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
+        <div class="nav-sub" id="sub-wash">
+          <div class="nav-sub-item" onclick="navTo(this,'wash')" data-page="wash">器械清洗管理</div>
+        </div>
+
+        <!-- 包配區 -->
+        <div class="nav-item" onclick="toggleSub(this,'sub-pack')">
+          <svg class="nav-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+          <span class="nav-item-text">包配區</span>
+          <svg class="nav-item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
+        <div class="nav-sub" id="sub-pack">
+          <div class="nav-sub-item" onclick="navTo(this,'pack-label')" data-page="pack-label">盤包標籤列印</div>
+          <div class="nav-sub-item" onclick="navTo(this,'pack-manage')" data-page="pack-manage">盤包包配管理</div>
+          <div class="nav-sub-item" onclick="navTo(this,'pack-cart')" data-page="pack-cart">備車管理</div>
+        </div>
+
+        <!-- 滅菌區 -->
+        <div class="nav-item" onclick="toggleSub(this,'sub-sterilize')">
+          <svg class="nav-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span class="nav-item-text">滅菌區</span>
+          <svg class="nav-item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
+        <div class="nav-sub" id="sub-sterilize">
+          <div class="nav-sub-item active" onclick="navTo(this,'sterilize')" data-page="sterilize">滅菌作業管理</div>
+          <div class="nav-sub-item" onclick="navTo(this,'sterilize-check')" data-page="sterilize-check">滅菌後檢驗管理</div>
+        </div>
+
+        <!-- 倉儲區 -->
+        <div class="nav-item" onclick="toggleSub(this,'sub-storage')">
+          <svg class="nav-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2Z"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          <span class="nav-item-text">倉儲區</span>
+          <svg class="nav-item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
+        <div class="nav-sub" id="sub-storage">
+          <div class="nav-sub-item" onclick="navTo(this,'storage')" data-page="storage">倉儲管理</div>
+          <div class="nav-sub-item" onclick="navTo(this,'stockout')" data-page="stockout">出庫管理</div>
+        </div>
+
+        <div class="nav-section-label">其他功能</div>
+        <div class="nav-item" onclick="navTo(this,'damage')" data-page="damage">
+          <svg class="nav-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          <span class="nav-item-text">器械損壞/遺失</span>
+        </div>
+
+        <!-- 查詢報表 -->
+        <div class="nav-item" onclick="toggleSub(this,'sub-report')">
+          <svg class="nav-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          <span class="nav-item-text">查詢與報表</span>
+          <svg class="nav-item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
+        <div class="nav-sub" id="sub-report">
+          <div class="nav-sub-item" onclick="navTo(this,'report-wash')" data-page="report-wash">清洗記錄查詢</div>
+          <div class="nav-sub-item" onclick="navTo(this,'report-sterilize')" data-page="report-sterilize">滅菌記錄查詢</div>
+          <div class="nav-sub-item" onclick="navTo(this,'instrument-history')" data-page="instrument-history">器械歷程查詢</div>
+        </div>
+      </nav>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content-wrapper">
+      <!-- TOPBAR -->
+      <div class="topbar">
+        <button class="topbar-burger" onclick="toggleSidebar()" id="burger-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="topbar-breadcrumb" id="topbar-breadcrumb">
+          <span>首頁</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+          <span id="breadcrumb-current">即時資訊</span>
+        </div>
+        <div class="topbar-right">
+          <button class="topbar-bell">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span class="bell-badge">3</span>
+          </button>
+          <div class="topbar-user">
+            <div class="topbar-avatar" id="topbar-avatar">王</div>
+            <div>
+              <div class="topbar-username" id="topbar-name">王小明</div>
+              <div class="topbar-dept">供應室</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGES -->
+      <div class="main-content">
+
+        <!-- ====== DASHBOARD ====== -->
+        <div class="page-section active" id="page-dashboard">
+          <div class="page-header">
+            <div class="page-title">即時資訊儀表板</div>
+            <div class="page-subtitle">2026年4月23日 星期四 ‧ 供應室管理員 王小明</div>
+          </div>
+
+          <!-- KPI CARDS -->
+          <div class="kpi-grid" id="kpi-grid"></div>
+
+          <!-- CHARTS -->
+          <div class="chart-row">
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <div class="card-title">本月每日盤包處理量</div>
+                  <div class="card-subtitle">2026年4月份</div>
+                </div>
+                <div class="chart-legend">
+                  <div class="legend-item"><div class="legend-dot" style="background:#3B82F6"></div>清洗量</div>
+                  <div class="legend-item"><div class="legend-dot" style="background:#10B981"></div>滅菌量</div>
+                  <div class="legend-item"><div class="legend-dot" style="background:#8B5CF6"></div>出庫量</div>
+                </div>
+              </div>
+              <div class="card-body">
+                <canvas id="chart-line" height="200"></canvas>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <div class="card-title">目前庫存盤包分佈</div>
+                  <div class="card-subtitle">各科室佔比</div>
+                </div>
+              </div>
+              <div class="card-body">
+                <canvas id="chart-donut" height="160"></canvas>
+                <div class="donut-legends" id="donut-legends"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ====== WASH ====== -->
+        <div class="page-section" id="page-wash">
+          <div class="page-header">
+            <div class="page-title">器械清洗管理</div>
+            <div class="page-subtitle">管理今日送洗批次及清洗進度</div>
+          </div>
+
+          <div class="search-bar">
+            <input type="date" id="wash-date" value="2026-04-23">
+            <div class="search-input-wrap">
+              <svg class="search-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <input class="search-input" placeholder="搜尋批次編號..." id="wash-search" oninput="renderWashTable()">
+            </div>
+            <select class="select-input" id="wash-status" onchange="renderWashTable()">
+              <option value="">全部狀態</option>
+              <option value="待清洗">待清洗</option>
+              <option value="清洗中">清洗中</option>
+              <option value="已完成">已完成</option>
+            </select>
+            <button class="btn btn-primary" onclick="searchWithLoading()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              搜尋
+            </button>
+          </div>
+
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>批次編號</th>
+                  <th>送洗時間</th>
+                  <th>器械種類</th>
+                  <th>數量</th>
+                  <th>清洗機台</th>
+                  <th>操作人員</th>
+                  <th>狀態</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="wash-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ====== STERILIZE ====== -->
+        <div class="page-section" id="page-sterilize">
+          <div class="page-header">
+            <div class="page-title">滅菌作業管理</div>
+            <div class="page-subtitle">監控滅菌鍋運作狀態及批次記錄</div>
+          </div>
+
+          <div class="sterilizer-grid" id="sterilizer-cards"></div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">今日滅菌批次記錄</div>
+              <span class="badge badge-blue">共 8 筆</span>
+            </div>
+            <div style="overflow:hidden; border-radius:0 0 12px 12px;">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>批次號</th>
+                    <th>滅菌鍋</th>
+                    <th>盤包數量</th>
+                    <th>開始時間</th>
+                    <th>結束時間</th>
+                    <th>狀態</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody id="sterilize-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ====== INSTRUMENT HISTORY ====== -->
+        <div class="page-section" id="page-instrument-history">
+          <div class="page-header">
+            <div class="page-title">器械歷程查詢</div>
+            <div class="page-subtitle">追溯單件器械完整處理流程</div>
+          </div>
+
+          <div class="search-bar" style="margin-bottom:24px;">
+            <div class="search-input-wrap">
+              <svg class="search-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+              <input class="search-input" placeholder="輸入器械條碼（如：INS-001-2023）" id="instrument-barcode" style="width:280px;">
+            </div>
+            <input type="date" value="2026-04-20" id="hist-date-start">
+            <span style="color:var(--text-secondary); font-size:13px;">至</span>
+            <input type="date" value="2026-04-23" id="hist-date-end">
+            <button class="btn btn-primary" onclick="queryHistory()" id="history-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              查詢
+            </button>
+          </div>
+
+          <!-- Empty state -->
+          <div id="history-empty" class="card">
+            <div class="card-body empty-state">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+              <p>請輸入器械條碼進行查詢</p>
+            </div>
+          </div>
+
+          <!-- Result -->
+          <div id="history-result" style="display:none;">
+            <div class="card" style="margin-bottom:16px;">
+              <div class="card-header">
+                <div>
+                  <div class="card-title" id="hist-instrument-name">腹腔鏡</div>
+                  <div class="card-subtitle" id="hist-instrument-barcode">條碼：INS-001-2023</div>
+                </div>
+                <span class="badge badge-green">追溯完整</span>
+              </div>
+              <div class="card-body">
+                <div class="info-grid">
+                  <div class="info-item"><div class="info-label">器械分類</div><div class="info-value">腹腔鏡器械組</div></div>
+                  <div class="info-item"><div class="info-label">目前狀態</div><div class="info-value">手術使用中</div></div>
+                  <div class="info-item"><div class="info-label">最後異動</div><div class="info-value">2026/04/22 10:00</div></div>
+                  <div class="info-item"><div class="info-label">累計使用次數</div><div class="info-value">42 次</div></div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">完整歷程紀錄</div>
+              </div>
+              <div class="card-body">
+                <div class="timeline" id="timeline-wrap"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ====== PLACEHOLDER PAGES ====== -->
+        <div class="page-section" id="page-pack-label"><div class="page-header"><div class="page-title">盤包標籤列印</div></div><div class="card"><div class="card-body empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h10"/><path d="M7 12h10"/><path d="M7 17h4"/></svg><p>此功能模組開發中</p></div></div></div>
+        <div class="page-section" id="page-pack-manage"><div class="page-header"><div class="page-title">盤包包配管理</div></div><div class="card"><div class="card-body empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/></svg><p>此功能模組開發中</p></div></div></div>
+        <div class="page-section" id="page-pack-cart"><div class="page-header"><div class="page-title">備車管理</div></div><div class="card"><div class="card-body empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg><p>此功能模組開發中</p></div></div></div>
+        <div class="page-section" id="page-sterilize-check"><div class="page-header"><div class="page-title">滅菌後檢驗管理</div></div><div class="card"><div class="card-body empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v11m0 0H5m4 0h10m-10 0a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2m0-11v11"/></svg><p>此功能模組開發中</p></div></div></div>
+        <div class="page-section" id="page-storage"><div class="page-header"><div class="page-title">倉儲管理</div></div><div class="card"><div class="card-body empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2Z"/></svg><p>此功能模組開發中</p></div></div></div>
+        <div class="page-section" id="page-stockout"><div class="page-header"><div class="page-title">出庫管理</div></div><div class="card"><div class="card-body empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3"/><rect x="9" y="11" width="14" height="10" rx="2"/><path d="m16 16 2 2 4-4"/></svg><p>此功能模組開發中</p></div></div></div>
+        <div class="page-section" id="page-damage"><div class="page-header"><div class="page-title">器械損壞/遺失通報</div></div><div class="card"><div class="card-body empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg><p>此功能模組開發中</p></div></div></div>
+        <div class="page-section" id="page-report-wash"><div class="page-header"><div class="page-title">清洗記錄查詢</div></div><div class="card"><div class="card-body empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg><p>此功能模組開發中</p></div></div></div>
+        <div class="page-section" id="page-report-sterilize"><div class="page-header"><div class="page-title">滅菌記錄查詢</div></div><div class="card"><div class="card-body empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><p>此功能模組開發中</p></div></div></div>
+
+      </div><!-- /main-content -->
+    </div><!-- /content-wrapper -->
+  </div><!-- /layout -->
+</div><!-- /main-page -->
+
+<!-- MODAL: wash detail -->
+<div class="modal-overlay" id="wash-modal" onclick="closeWashModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-batch-id">W2026042301</div>
+      <button class="modal-close" onclick="document.getElementById('wash-modal').classList.remove('active')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="info-grid" id="modal-info"></div>
+      <div style="font-size:12px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px;">器械清單</div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>器械名稱</th><th>條碼</th><th>狀態</th></tr></thead>
+          <tbody id="modal-instruments"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="document.getElementById('wash-modal').classList.remove('active')">關閉</button>
+      <button class="btn btn-success" id="confirm-wash-btn" onclick="confirmWash()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
+        確認完成清洗
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-container" id="toast-container"></div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
