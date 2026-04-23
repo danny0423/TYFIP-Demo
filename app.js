@@ -99,6 +99,7 @@ document.addEventListener('keydown', e => {
 
 // ====== INIT ======
 function initApp() {
+  renderDashboardSubtitle();
   renderKPI();
   renderWashTable();
   renderSterilizerCards();
@@ -157,6 +158,15 @@ function navTo(el, page) {
       initCharts();
     }, 50);
   }
+}
+
+// ====== DASHBOARD SUBTITLE ======
+function renderDashboardSubtitle() {
+  const now = new Date();
+  const weekDays = ['日', '一', '二', '三', '四', '五', '六'];
+  const dateStr = `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日 星期${weekDays[now.getDay()]}`;
+  const el = document.getElementById('dashboard-subtitle');
+  if (el) el.textContent = `${dateStr} ‧ 供應室管理員 ${DEMO_DATA.user.name}`;
 }
 
 // ====== KPI CARDS ======
