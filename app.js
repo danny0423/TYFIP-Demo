@@ -109,8 +109,20 @@ function initApp() {
 
 // ====== SIDEBAR ======
 function toggleSidebar() {
-  sidebarCollapsed = !sidebarCollapsed;
-  document.getElementById('sidebar').classList.toggle('collapsed', sidebarCollapsed);
+  const isMobile = window.innerWidth <= 768;
+  if (isMobile) {
+    document.getElementById('sidebar').classList.toggle('mobile-open');
+    document.getElementById('sidebar-overlay').classList.toggle('active',
+      document.getElementById('sidebar').classList.contains('mobile-open'));
+  } else {
+    sidebarCollapsed = !sidebarCollapsed;
+    document.getElementById('sidebar').classList.toggle('collapsed', sidebarCollapsed);
+  }
+}
+
+function closeMobileSidebar() {
+  document.getElementById('sidebar').classList.remove('mobile-open');
+  document.getElementById('sidebar-overlay').classList.remove('active');
 }
 
 function toggleSub(el, subId) {
@@ -149,6 +161,8 @@ function navTo(el, page) {
   document.getElementById('breadcrumb-current').textContent = labels[page] || page;
 
   currentPage = page;
+
+  if (window.innerWidth <= 768) closeMobileSidebar();
 
   // re-render charts when switching to dashboard
   if (page === 'dashboard') {
