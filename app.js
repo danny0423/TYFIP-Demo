@@ -349,8 +349,8 @@ function renderWashTable() {
   `).join('');
 }
 
-function searchWithLoading() {
-  const btn = event.currentTarget;
+function searchWithLoading(btn) {
+  if (!btn) btn = document.querySelector('#page-wash .btn-primary');
   const orig = btn.innerHTML;
   btn.innerHTML = '<div class="spinner"></div> 搜尋中';
   btn.classList.add('btn-loading');
@@ -360,6 +360,12 @@ function searchWithLoading() {
     renderWashTable();
   }, 500);
 }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.activeElement?.id === 'wash-search') {
+    searchWithLoading();
+  }
+});
 
 // ====== WASH MODAL ======
 function openWashModal(id) {

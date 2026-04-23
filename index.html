@@ -300,15 +300,15 @@
             <input type="date" id="wash-date" value="2026-04-23">
             <div class="search-input-wrap">
               <svg class="search-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-              <input class="search-input" placeholder="搜尋批次編號..." id="wash-search" oninput="renderWashTable()">
+              <input class="search-input" placeholder="搜尋批次編號..." id="wash-search" >
             </div>
-            <select class="select-input" id="wash-status" onchange="renderWashTable()">
+            <select class="select-input" id="wash-status" >
               <option value="">全部狀態</option>
               <option value="待清洗">待清洗</option>
               <option value="清洗中">清洗中</option>
               <option value="已完成">已完成</option>
             </select>
-            <button class="btn btn-primary" onclick="searchWithLoading()">
+            <button class="btn btn-primary" onclick="searchWithLoading(this)">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
               搜尋
             </button>
