@@ -8,6 +8,76 @@ let lineChart = null;
 let donutChart = null;
 let currentWashBatch = null;
 
+// ====== NOTIFICATIONS ======
+let unreadCount = 3;
+
+function toggleNotifMenu(e) {
+  e.stopPropagation();
+  document.getElementById('user-dropdown').classList.remove('open');
+  document.getElementById('notif-dropdown').classList.toggle('open');
+}
+
+function markNotifRead(el) {
+  if (!el.classList.contains('unread')) return;
+  el.classList.remove('unread');
+  unreadCount = Math.max(0, unreadCount - 1);
+  updateBellBadge();
+}
+
+function markAllNotifRead() {
+  document.querySelectorAll('.notif-item.unread').forEach(el => el.classList.remove('unread'));
+  unreadCount = 0;
+  updateBellBadge();
+  document.getElementById('notif-dropdown').classList.remove('open');
+}
+
+function updateBellBadge() {
+  const badge = document.getElementById('bell-badge');
+  const unreadBadge = document.getElementById('notif-unread-badge');
+  if (unreadCount === 0) {
+    badge.style.display = 'none';
+    unreadBadge.textContent = '全部已讀';
+    unreadBadge.className = 'badge badge-gray';
+  } else {
+    badge.style.display = 'flex';
+    badge.textContent = unreadCount;
+    unreadBadge.textContent = `${unreadCount} 則未讀`;
+    unreadBadge.className = 'badge badge-blue';
+  }
+}
+
+// ====== USER MENU ======
+function toggleUserMenu(e) {
+  e.stopPropagation();
+  document.getElementById('notif-dropdown').classList.remove('open');
+  document.getElementById('user-dropdown').classList.toggle('open');
+}
+
+document.addEventListener('click', () => {
+  document.getElementById('user-dropdown')?.classList.remove('open');
+  document.getElementById('notif-dropdown')?.classList.remove('open');
+});
+
+function doLogout() {
+  document.getElementById('user-dropdown').classList.remove('open');
+  document.getElementById('main-page').style.display = 'none';
+  document.getElementById('login-page').style.display = 'flex';
+
+  // reset state
+  currentPage = 'dashboard';
+  sidebarCollapsed = false;
+  if (lineChart) { lineChart.destroy(); lineChart = null; }
+  if (donutChart) { donutChart.destroy(); donutChart = null; }
+  currentWashBatch = null;
+
+  document.getElementById('sidebar').classList.remove('collapsed');
+  document.querySelectorAll('.nav-item, .nav-sub-item').forEach(n => n.classList.remove('active'));
+  document.querySelector('.nav-item[data-page="dashboard"]').classList.add('active');
+  document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-dashboard').classList.add('active');
+  document.querySelectorAll('.nav-sub').forEach(s => s.classList.remove('open'));
+}
+
 // ====== LOGIN ======
 function doLogin() {
   const btn = document.getElementById('login-btn');
