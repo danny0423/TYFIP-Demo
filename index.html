@@ -86,7 +86,7 @@
 
       <nav class="sidebar-nav" id="sidebar-nav">
         <div class="nav-section-label">即時資訊</div>
-        <div class="nav-item active" onclick="navTo(this,'dashboard')" data-page="dashboard">
+        <div class="nav-item active" onclick="navTo(this,'dashboard')" data-page="dashboard" data-tooltip="首頁儀表板">
           <svg class="nav-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
           <span class="nav-item-text">首頁儀表板</span>
         </div>
@@ -94,7 +94,7 @@
         <div class="nav-section-label">供應室功能</div>
 
         <!-- 清洗區 -->
-        <div class="nav-item" onclick="toggleSub(this,'sub-wash')">
+        <div class="nav-item" onclick="toggleSub(this,'sub-wash')" data-tooltip="清洗區">
           <svg class="nav-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.8-4-4-6.5c-.3 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg>
           <span class="nav-item-text">清洗區</span>
           <svg class="nav-item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
@@ -104,7 +104,7 @@
         </div>
 
         <!-- 包配區 -->
-        <div class="nav-item" onclick="toggleSub(this,'sub-pack')">
+        <div class="nav-item" onclick="toggleSub(this,'sub-pack')" data-tooltip="包配區">
           <svg class="nav-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
           <span class="nav-item-text">包配區</span>
           <svg class="nav-item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
@@ -116,7 +116,7 @@
         </div>
 
         <!-- 滅菌區 -->
-        <div class="nav-item" onclick="toggleSub(this,'sub-sterilize')">
+        <div class="nav-item" onclick="toggleSub(this,'sub-sterilize')" data-tooltip="滅菌區">
           <svg class="nav-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           <span class="nav-item-text">滅菌區</span>
           <svg class="nav-item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
@@ -127,7 +127,7 @@
         </div>
 
         <!-- 倉儲區 -->
-        <div class="nav-item" onclick="toggleSub(this,'sub-storage')">
+        <div class="nav-item" onclick="toggleSub(this,'sub-storage')" data-tooltip="倉儲區">
           <svg class="nav-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2Z"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
           <span class="nav-item-text">倉儲區</span>
           <svg class="nav-item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
@@ -138,13 +138,13 @@
         </div>
 
         <div class="nav-section-label">其他功能</div>
-        <div class="nav-item" onclick="navTo(this,'damage')" data-page="damage">
+        <div class="nav-item" onclick="navTo(this,'damage')" data-page="damage" data-tooltip="器械損壞/遺失">
           <svg class="nav-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
           <span class="nav-item-text">器械損壞/遺失</span>
         </div>
 
         <!-- 查詢報表 -->
-        <div class="nav-item" onclick="toggleSub(this,'sub-report')">
+        <div class="nav-item" onclick="toggleSub(this,'sub-report')" data-tooltip="查詢與報表">
           <svg class="nav-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
           <span class="nav-item-text">查詢與報表</span>
           <svg class="nav-item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>

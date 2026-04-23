@@ -275,6 +275,25 @@ body {
 .sidebar.collapsed .nav-item-arrow { opacity: 0; }
 .nav-item.open .nav-item-arrow { transform: rotate(90deg); }
 
+/* Sidebar collapsed tooltip */
+.sidebar.collapsed .nav-item[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 72px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--text);
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  padding: 5px 10px;
+  border-radius: 6px;
+  pointer-events: none;
+  z-index: 300;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
 .nav-sub {
   overflow: hidden;
   max-height: 0;
