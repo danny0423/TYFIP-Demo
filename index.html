@@ -428,19 +428,23 @@
 
         <!-- ====== PLACEHOLDER PAGES ====== -->
         <div class="page-section" id="page-pack-label">
-          <div class="page-header"><div class="page-title">盤包標籤列印</div><div class="page-subtitle">產生並列印各類盤包的條碼標籤</div></div>
-          <div class="card"><div class="coming-soon-wrap">
-            <div class="coming-soon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h10"/><path d="M7 12h10"/><path d="M7 17h4"/></svg></div>
-            <div class="coming-soon-title">盤包標籤列印模組</div>
-            <div class="coming-soon-desc">此功能將提供完整的標籤設計與列印管理，支援多種標籤格式與條碼規格。</div>
-            <div class="coming-soon-features">
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>自訂標籤版型與欄位內容</div>
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>支援 QR Code / 條碼 / 二維碼</div>
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>批量列印與預覽功能</div>
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>列印記錄追蹤</div>
+          <div class="page-header">
+            <div><div class="page-title">盤包標籤列印</div><div class="page-subtitle">產生並列印各類盤包的條碼標籤</div></div>
+            <button class="btn btn-primary btn-sm" onclick="printSelectedLabels(this)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              列印待列印標籤
+            </button>
+          </div>
+          <div class="card" style="margin-top:16px">
+            <div class="card-body" style="padding:0">
+              <table class="data-table">
+                <thead><tr>
+                  <th>條碼</th><th>盤包名稱</th><th>器械類型</th><th>列印數量</th><th>印表機</th><th>操作人員</th><th>列印時間</th><th>狀態</th><th>操作</th>
+                </tr></thead>
+                <tbody id="pack-label-tbody"></tbody>
+              </table>
             </div>
-            <div class="coming-soon-eta"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>預計 Q3 2026 上線</div>
-          </div></div>
+          </div>
         </div>
 
         <div class="page-section" id="page-pack-manage">
@@ -473,18 +477,10 @@
         </div>
 
         <div class="page-section" id="page-pack-cart">
-          <div class="page-header"><div class="page-title">備車管理</div><div class="page-subtitle">管理手術室推車的盤包配送狀態</div></div>
-          <div class="card"><div class="coming-soon-wrap">
-            <div class="coming-soon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></div>
-            <div class="coming-soon-title">備車管理模組</div>
-            <div class="coming-soon-desc">追蹤手術備車的盤包裝載狀態，確保手術前準備工作準時完成。</div>
-            <div class="coming-soon-features">
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>備車與手術台對應管理</div>
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>配送進度即時追蹤</div>
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>缺件自動通報警示</div>
-            </div>
-            <div class="coming-soon-eta"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>預計 Q4 2026 上線</div>
-          </div></div>
+          <div class="page-header">
+            <div><div class="page-title">備車管理</div><div class="page-subtitle">管理手術室推車的盤包配送狀態</div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-top:16px" id="pack-cart-grid"></div>
         </div>
 
         <div class="page-section" id="page-sterilize-check">
@@ -523,82 +519,165 @@
         </div>
 
         <div class="page-section" id="page-storage">
-          <div class="page-header"><div class="page-title">倉儲管理</div><div class="page-subtitle">管理供應室各貨架的盤包庫存</div></div>
-          <div class="card"><div class="coming-soon-wrap">
-            <div class="coming-soon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2Z"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
-            <div class="coming-soon-title">倉儲管理模組</div>
-            <div class="coming-soon-desc">精準掌握各貨架庫存數量與有效期限，即時警示即將到期或庫存不足的盤包。</div>
-            <div class="coming-soon-features">
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>貨架位置與庫存數量管理</div>
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>有效期限到期警示</div>
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>先進先出 (FIFO) 管理</div>
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>庫存盤點與差異報告</div>
+          <div class="page-header">
+            <div><div class="page-title">倉儲管理</div><div class="page-subtitle">管理供應室各貨架的盤包庫存</div></div>
+          </div>
+          <div class="search-bar">
+            <input class="form-input" id="storage-search" placeholder="搜尋盤包名稱、條碼..." style="width:260px">
+            <select class="select-input" id="storage-filter">
+              <option value="">全部庫存</option>
+              <option value="near">即將到期</option>
+              <option value="expired">已過期</option>
+              <option value="normal">正常</option>
+            </select>
+            <button class="btn btn-primary btn-sm" onclick="searchStorageWithLoading(this)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              搜尋
+            </button>
+          </div>
+          <div class="card" style="margin-top:16px">
+            <div class="card-body" style="padding:0">
+              <table class="data-table">
+                <thead><tr>
+                  <th>條碼</th><th>盤包名稱</th><th>貨架位置</th><th>庫存數量</th><th>滅菌方式</th><th>有效期限</th><th>狀態</th><th>操作</th>
+                </tr></thead>
+                <tbody id="storage-tbody"></tbody>
+              </table>
             </div>
-            <div class="coming-soon-eta"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>預計 Q4 2026 上線</div>
-          </div></div>
+          </div>
         </div>
 
         <div class="page-section" id="page-stockout">
-          <div class="page-header"><div class="page-title">出庫管理</div><div class="page-subtitle">管理盤包配發至各手術室的出庫流程</div></div>
-          <div class="card"><div class="coming-soon-wrap">
-            <div class="coming-soon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3"/><rect x="9" y="11" width="14" height="10" rx="2"/><path d="m16 16 2 2 4-4"/></svg></div>
-            <div class="coming-soon-title">出庫管理模組</div>
-            <div class="coming-soon-desc">掌握盤包從供應室到各手術室的完整配送流程，每一步都有電子簽收記錄。</div>
-            <div class="coming-soon-features">
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>科室出庫申請與核准</div>
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>條碼掃描出庫確認</div>
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>領取人電子簽收</div>
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>出庫量統計報表</div>
+          <div class="page-header">
+            <div><div class="page-title">出庫管理</div><div class="page-subtitle">管理盤包配發至各手術室的出庫流程</div></div>
+          </div>
+          <div class="search-bar">
+            <select class="select-input" id="stockout-status">
+              <option value="">全部狀態</option>
+              <option value="撥補中">撥補中</option>
+              <option value="撥補完成">撥補完成</option>
+              <option value="轉移完成">轉移完成</option>
+            </select>
+            <button class="btn btn-primary btn-sm" onclick="searchStockoutWithLoading(this)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              篩選
+            </button>
+          </div>
+          <div class="card" style="margin-top:16px">
+            <div class="card-body" style="padding:0">
+              <table class="data-table">
+                <thead><tr>
+                  <th>出庫單號</th><th>盤包名稱</th><th>配送目的地</th><th>申請人員</th><th>申請時間</th><th>出庫時間</th><th>領取人</th><th>狀態</th><th>操作</th>
+                </tr></thead>
+                <tbody id="stockout-tbody"></tbody>
+              </table>
             </div>
-            <div class="coming-soon-eta"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>預計 Q4 2026 上線</div>
-          </div></div>
+          </div>
         </div>
 
         <div class="page-section" id="page-damage">
-          <div class="page-header"><div class="page-title">器械損壞/遺失通報</div><div class="page-subtitle">通報與追蹤器械損壞或遺失事件</div></div>
-          <div class="card"><div class="coming-soon-wrap">
-            <div class="coming-soon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
-            <div class="coming-soon-title">器械損壞/遺失通報模組</div>
-            <div class="coming-soon-desc">建立標準化的器械異常通報流程，確保損壞或遺失的器械能快速追蹤與處置。</div>
-            <div class="coming-soon-features">
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>線上損壞遺失通報表單</div>
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>照片上傳與損壞描述</div>
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>主管審核與報廢簽核</div>
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>器械損耗率統計分析</div>
+          <div class="page-header">
+            <div><div class="page-title">器械損壞/遺失通報</div><div class="page-subtitle">通報與追蹤器械損壞或遺失事件</div></div>
+          </div>
+          <div class="search-bar">
+            <select class="select-input" id="damage-type">
+              <option value="">全部類型</option>
+              <option value="損壞">損壞</option>
+              <option value="遺失">遺失</option>
+            </select>
+            <select class="select-input" id="damage-status">
+              <option value="">全部狀態</option>
+              <option value="待審核">待審核</option>
+              <option value="報修中">報修中</option>
+              <option value="調查中">調查中</option>
+              <option value="維修完成">維修完成</option>
+              <option value="已報廢">已報廢</option>
+            </select>
+            <button class="btn btn-primary btn-sm" onclick="searchDamageWithLoading(this)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              篩選
+            </button>
+          </div>
+          <div class="card" style="margin-top:16px">
+            <div class="card-body" style="padding:0">
+              <table class="data-table">
+                <thead><tr>
+                  <th>通報單號</th><th>器械名稱</th><th>條碼</th><th>類型</th><th>損壞描述</th><th>通報人員</th><th>通報時間</th><th>狀態</th><th>操作</th>
+                </tr></thead>
+                <tbody id="damage-tbody"></tbody>
+              </table>
             </div>
-            <div class="coming-soon-eta"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>預計 Q3 2026 上線</div>
-          </div></div>
+          </div>
         </div>
 
         <div class="page-section" id="page-report-wash">
-          <div class="page-header"><div class="page-title">清洗記錄查詢</div><div class="page-subtitle">查詢與匯出歷史清洗作業記錄</div></div>
-          <div class="card"><div class="coming-soon-wrap">
-            <div class="coming-soon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
-            <div class="coming-soon-title">清洗記錄查詢模組</div>
-            <div class="coming-soon-desc">提供完整的歷史清洗記錄查詢，支援多條件篩選與 Excel 匯出，滿足稽核需求。</div>
-            <div class="coming-soon-features">
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>多條件篩選與全文搜尋</div>
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>清洗參數完整記錄</div>
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Excel / PDF 匯出</div>
+          <div class="page-header">
+            <div><div class="page-title">清洗記錄查詢</div><div class="page-subtitle">查詢與匯出歷史清洗作業記錄</div></div>
+            <button class="btn btn-outline btn-sm" onclick="exportToast()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              匯出 Excel
+            </button>
+          </div>
+          <div class="search-bar">
+            <input class="form-input" id="report-wash-search" placeholder="搜尋批次、器械類型..." style="width:240px">
+            <select class="select-input" id="report-wash-status">
+              <option value="">全部狀態</option>
+              <option value="已完成">已完成</option>
+              <option value="異常">異常</option>
+            </select>
+            <button class="btn btn-primary btn-sm" onclick="searchReportWashWithLoading(this)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              查詢
+            </button>
+          </div>
+          <div class="card" style="margin-top:16px">
+            <div class="card-body" style="padding:0">
+              <table class="data-table">
+                <thead><tr>
+                  <th>批次編號</th><th>清洗時間</th><th>器械類型</th><th>器械數量</th><th>清洗機</th><th>操作人員</th><th>水溫</th><th>清洗時長</th><th>ATP 檢測</th><th>狀態</th>
+                </tr></thead>
+                <tbody id="report-wash-tbody"></tbody>
+              </table>
             </div>
-            <div class="coming-soon-eta"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>預計 Q3 2026 上線</div>
-          </div></div>
+          </div>
         </div>
 
         <div class="page-section" id="page-report-sterilize">
-          <div class="page-header"><div class="page-title">滅菌記錄查詢</div><div class="page-subtitle">查詢與匯出歷史滅菌作業記錄</div></div>
-          <div class="card"><div class="coming-soon-wrap">
-            <div class="coming-soon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-            <div class="coming-soon-title">滅菌記錄查詢模組</div>
-            <div class="coming-soon-desc">完整保存每批次滅菌的溫度、壓力、時間參數，符合 ISO 17665 及衛福部相關法規要求。</div>
-            <div class="coming-soon-features">
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>滅菌參數圖表化呈現</div>
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>法規稽核報表一鍵產生</div>
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>跨月份趨勢分析</div>
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>異常批次自動標記</div>
+          <div class="page-header">
+            <div><div class="page-title">滅菌記錄查詢</div><div class="page-subtitle">查詢與匯出歷史滅菌作業記錄</div></div>
+            <button class="btn btn-outline btn-sm" onclick="exportToast()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              匯出 Excel
+            </button>
+          </div>
+          <div class="search-bar">
+            <select class="select-input" id="report-sterilize-machine">
+              <option value="">全部滅菌鍋</option>
+              <option value="滅菌鍋 #1">滅菌鍋 #1</option>
+              <option value="滅菌鍋 #2">滅菌鍋 #2</option>
+              <option value="滅菌鍋 #3">滅菌鍋 #3</option>
+            </select>
+            <select class="select-input" id="report-sterilize-status">
+              <option value="">全部狀態</option>
+              <option value="通過">通過</option>
+              <option value="待檢驗">待檢驗</option>
+              <option value="不合格">不合格</option>
+            </select>
+            <button class="btn btn-primary btn-sm" onclick="searchReportSterilizeWithLoading(this)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              查詢
+            </button>
+          </div>
+          <div class="card" style="margin-top:16px">
+            <div class="card-body" style="padding:0">
+              <table class="data-table">
+                <thead><tr>
+                  <th>批次編號</th><th>滅菌鍋</th><th>滅菌方式</th><th>溫度</th><th>壓力</th><th>時長</th><th>盤包數</th><th>開始時間</th><th>結束時間</th><th>操作人員</th><th>化學指示劑</th><th>生物指示劑</th><th>狀態</th>
+                </tr></thead>
+                <tbody id="report-sterilize-tbody"></tbody>
+              </table>
             </div>
-            <div class="coming-soon-eta"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>預計 Q4 2026 上線</div>
-          </div></div>
+          </div>
         </div>
 
       </div><!-- /main-content -->

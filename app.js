@@ -106,6 +106,13 @@ function initApp() {
   renderSterilizeBatches();
   renderPackManageTable();
   renderSterilizeCheck();
+  renderStorageTable();
+  renderStockoutTable();
+  renderDamageTable();
+  renderReportWashTable();
+  renderReportSterilizeTable();
+  renderPackLabelTable();
+  renderPackCartGrid();
   initCharts();
 }
 
@@ -785,6 +792,381 @@ function confirmSterilizeCheck(id) {
   renderSterilizeCheck();
   renderKPI();
   showToast('滅菌後檢驗結果已登錄，批次通過，已進入待入庫佇列');
+}
+
+// ====== STORAGE ======
+function renderStorageTable() {
+  const keyword = (document.getElementById('storage-search')?.value || '').trim().toLowerCase();
+  const filter = document.getElementById('storage-filter')?.value || '';
+  const tbody = document.getElementById('storage-tbody');
+  if (!tbody) return;
+
+  const data = DEMO_DATA.storage.filter(s => {
+    const matchKw = !keyword || s.name.toLowerCase().includes(keyword) || s.barcode.toLowerCase().includes(keyword);
+    const matchFilter = !filter ||
+      (filter === 'near' && s.nearExpire && !s.expired) ||
+      (filter === 'expired' && s.expired) ||
+      (filter === 'normal' && !s.nearExpire && !s.expired);
+    return matchKw && matchFilter;
+  });
+
+  if (!data.length) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--text-secondary);padding:32px">查無符合條件的庫存記錄</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = data.map(s => {
+    const expireTag = s.expired
+      ? '<span class="badge badge-red">已過期</span>'
+      : s.nearExpire
+        ? '<span class="badge badge-orange">即將到期</span>'
+        : '<span class="badge badge-green">正常</span>';
+    return `
+      <tr>
+        <td style="font-family:monospace;font-size:12px">${s.barcode}</td>
+        <td style="font-weight:500">${s.name}</td>
+        <td><span style="background:var(--accent-light);color:var(--accent);padding:2px 8px;border-radius:4px;font-size:12px">${s.location}</span></td>
+        <td style="text-align:center;font-weight:600">${s.qty}</td>
+        <td>${s.sterileMethod}</td>
+        <td style="${s.expired ? 'color:var(--danger);font-weight:500' : s.nearExpire ? 'color:var(--warning);font-weight:500' : ''}">${s.expireDate}</td>
+        <td>${expireTag}</td>
+        <td>
+          <button class="btn btn-outline btn-sm">出庫</button>
+          ${s.expired ? `<button class="btn btn-sm" style="margin-left:6px;background:#FEF2F2;color:var(--danger);border:1px solid #FECACA">申請報廢</button>` : ''}
+        </td>
+      </tr>`;
+  }).join('');
+}
+
+function searchStorageWithLoading(btn) {
+  const origInner = btn.innerHTML;
+  btn.innerHTML = '<div class="spinner"></div> 搜尋中';
+  btn.classList.add('btn-loading');
+  setTimeout(() => {
+    btn.innerHTML = origInner;
+    btn.classList.remove('btn-loading');
+    renderStorageTable();
+  }, 500);
+}
+
+// ====== STOCKOUT ======
+function renderStockoutTable() {
+  const status = document.getElementById('stockout-status')?.value || '';
+  const tbody = document.getElementById('stockout-tbody');
+  if (!tbody) return;
+
+  const data = DEMO_DATA.stockout.filter(o => !status || o.status === status);
+
+  if (!data.length) {
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text-secondary);padding:32px">查無符合條件的出庫記錄</td></tr>';
+    return;
+  }
+
+  const statusMap = { '撥補中': 'badge-orange', '撥補完成': 'badge-green', '轉移完成': 'badge-blue' };
+  tbody.innerHTML = data.map(o => {
+    let actionBtn = '';
+    if (o.status === '撥補中') actionBtn = `<button class="btn btn-primary btn-sm" onclick="confirmStockout('${o.id}')">確認送達</button>`;
+    else if (o.status === '撥補完成') actionBtn = `<button class="btn btn-outline btn-sm">查看撥補結果</button>`;
+    else actionBtn = `<button class="btn btn-outline btn-sm">查看轉移結果</button>`;
+    return `
+      <tr>
+        <td style="font-family:monospace;font-size:12px">${o.id}</td>
+        <td style="font-weight:500">${o.name}</td>
+        <td>${o.dest}</td>
+        <td>${o.requester}</td>
+        <td>${o.requestTime}</td>
+        <td>${o.outTime}</td>
+        <td>${o.receiver}</td>
+        <td><span class="badge ${statusMap[o.status] || 'badge-gray'}">${o.status}</span></td>
+        <td>${actionBtn}</td>
+      </tr>`;
+  }).join('');
+}
+
+function searchStockoutWithLoading(btn) {
+  const origInner = btn.innerHTML;
+  btn.innerHTML = '<div class="spinner"></div> 篩選中';
+  btn.classList.add('btn-loading');
+  setTimeout(() => {
+    btn.innerHTML = origInner;
+    btn.classList.remove('btn-loading');
+    renderStockoutTable();
+  }, 500);
+}
+
+function confirmStockout(id) {
+  const item = DEMO_DATA.stockout.find(o => o.id === id);
+  if (!item) return;
+  item.status = '撥補完成';
+  item.outTime = new Date().toLocaleString('zh-TW', { hour12: false }).replace(/\//g, '/').slice(0, 16);
+  item.receiver = DEMO_DATA.user.name;
+  DEMO_DATA.dashboard.kpi.stockOut += 1;
+  renderStockoutTable();
+  renderKPI();
+  showToast('出庫確認完成，盤包已送達目的地');
+}
+
+// ====== DAMAGE ======
+function renderDamageTable() {
+  const type = document.getElementById('damage-type')?.value || '';
+  const status = document.getElementById('damage-status')?.value || '';
+  const tbody = document.getElementById('damage-tbody');
+  if (!tbody) return;
+
+  const data = DEMO_DATA.damage.filter(d => {
+    return (!type || d.type === type) && (!status || d.status === status);
+  });
+
+  if (!data.length) {
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text-secondary);padding:32px">查無符合條件的通報記錄</td></tr>';
+    return;
+  }
+
+  const statusMap = { '待審核': 'badge-orange', '報修中': 'badge-blue', '調查中': 'badge-purple', '維修完成': 'badge-green', '已報廢': 'badge-gray' };
+  const typeMap = { '損壞': 'badge-orange', '遺失': 'badge-red' };
+  tbody.innerHTML = data.map(d => `
+    <tr>
+      <td style="font-family:monospace;font-size:12px">${d.id}</td>
+      <td style="font-weight:500">${d.instrumentName}</td>
+      <td style="font-family:monospace;font-size:12px">${d.barcode}</td>
+      <td><span class="badge ${typeMap[d.type] || 'badge-gray'}">${d.type}</span></td>
+      <td style="max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${d.desc}">${d.desc}</td>
+      <td>${d.reporter}</td>
+      <td>${d.reportTime}</td>
+      <td><span class="badge ${statusMap[d.status] || 'badge-gray'}">${d.status}</span></td>
+      <td>
+        ${d.status === '待審核' ? `<button class="btn btn-primary btn-sm" onclick="approveDamage('${d.id}')">審核通過</button>` : ''}
+        ${d.status === '報修中' ? `<button class="btn btn-outline btn-sm">查看報修進度</button>` : ''}
+        ${d.status === '調查中' ? `<button class="btn btn-outline btn-sm">查看調查結果</button>` : ''}
+      </td>
+    </tr>`).join('');
+}
+
+function searchDamageWithLoading(btn) {
+  const origInner = btn.innerHTML;
+  btn.innerHTML = '<div class="spinner"></div> 篩選中';
+  btn.classList.add('btn-loading');
+  setTimeout(() => {
+    btn.innerHTML = origInner;
+    btn.classList.remove('btn-loading');
+    renderDamageTable();
+  }, 500);
+}
+
+function approveDamage(id) {
+  const item = DEMO_DATA.damage.find(d => d.id === id);
+  if (!item) return;
+  item.status = item.type === '遺失' ? '調查中' : '報修中';
+  DEMO_DATA.dashboard.kpi.damage = Math.max(0, DEMO_DATA.dashboard.kpi.damage - 1);
+  renderDamageTable();
+  renderKPI();
+  showToast('審核完成，已移交' + (item.type === '遺失' ? '調查' : '報修') + '作業');
+}
+
+// ====== REPORT WASH ======
+function renderReportWashTable() {
+  const keyword = (document.getElementById('report-wash-search')?.value || '').trim().toLowerCase();
+  const status = document.getElementById('report-wash-status')?.value || '';
+  const tbody = document.getElementById('report-wash-tbody');
+  if (!tbody) return;
+
+  const data = DEMO_DATA.reportWash.filter(r => {
+    const matchKw = !keyword || r.type.toLowerCase().includes(keyword) || r.id.toLowerCase().includes(keyword);
+    const matchSt = !status || r.status === status;
+    return matchKw && matchSt;
+  });
+
+  if (!data.length) {
+    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:var(--text-secondary);padding:32px">查無符合條件的清洗記錄</td></tr>';
+    return;
+  }
+
+  const atpBadge = v => v === '合格' ? '<span class="badge badge-green">合格</span>' : '<span class="badge badge-red">不合格</span>';
+  const statusMap = { '已完成': 'badge-green', '異常': 'badge-red' };
+  tbody.innerHTML = data.map(r => `
+    <tr>
+      <td style="font-family:monospace;font-size:12px">${r.id}</td>
+      <td>${r.time}</td>
+      <td>${r.type}</td>
+      <td style="text-align:center">${r.count}</td>
+      <td>${r.machine}</td>
+      <td>${r.operator}</td>
+      <td>${r.temp}</td>
+      <td>${r.duration}</td>
+      <td style="text-align:center">${atpBadge(r.atpResult)}</td>
+      <td><span class="badge ${statusMap[r.status] || 'badge-gray'}">${r.status}</span></td>
+    </tr>`).join('');
+}
+
+function searchReportWashWithLoading(btn) {
+  const origInner = btn.innerHTML;
+  btn.innerHTML = '<div class="spinner"></div> 查詢中';
+  btn.classList.add('btn-loading');
+  setTimeout(() => {
+    btn.innerHTML = origInner;
+    btn.classList.remove('btn-loading');
+    renderReportWashTable();
+  }, 600);
+}
+
+// ====== REPORT STERILIZE ======
+function renderReportSterilizeTable() {
+  const machine = document.getElementById('report-sterilize-machine')?.value || '';
+  const status = document.getElementById('report-sterilize-status')?.value || '';
+  const tbody = document.getElementById('report-sterilize-tbody');
+  if (!tbody) return;
+
+  const data = DEMO_DATA.reportSterilize.filter(r => {
+    return (!machine || r.machine === machine) && (!status || r.status === status);
+  });
+
+  if (!data.length) {
+    tbody.innerHTML = '<tr><td colspan="13" style="text-align:center;color:var(--text-secondary);padding:32px">查無符合條件的滅菌記錄</td></tr>';
+    return;
+  }
+
+  const indicatorBadge = v => {
+    if (v === '合格') return '<span class="badge badge-green">合格</span>';
+    if (v === '不合格') return '<span class="badge badge-red">不合格</span>';
+    if (v === '待判讀') return '<span class="badge badge-orange">待判讀</span>';
+    return v;
+  };
+  const statusMap = { '通過': 'badge-green', '待檢驗': 'badge-orange', '不合格': 'badge-red' };
+  tbody.innerHTML = data.map(r => `
+    <tr>
+      <td style="font-family:monospace;font-size:12px">${r.id}</td>
+      <td>${r.machine}</td>
+      <td>${r.method}</td>
+      <td>${r.temp}</td>
+      <td>${r.pressure}</td>
+      <td>${r.duration}</td>
+      <td style="text-align:center">${r.packageCount}</td>
+      <td>${r.startTime}</td>
+      <td>${r.endTime}</td>
+      <td>${r.operator}</td>
+      <td style="text-align:center">${indicatorBadge(r.chemIndicator)}</td>
+      <td style="text-align:center">${indicatorBadge(r.bioIndicator)}</td>
+      <td><span class="badge ${statusMap[r.status] || 'badge-gray'}">${r.status}</span></td>
+    </tr>`).join('');
+}
+
+function searchReportSterilizeWithLoading(btn) {
+  const origInner = btn.innerHTML;
+  btn.innerHTML = '<div class="spinner"></div> 查詢中';
+  btn.classList.add('btn-loading');
+  setTimeout(() => {
+    btn.innerHTML = origInner;
+    btn.classList.remove('btn-loading');
+    renderReportSterilizeTable();
+  }, 600);
+}
+
+function exportToast() {
+  showToast('Excel 報表已產生，正在下載...', 'success');
+}
+
+// ====== PACK LABEL ======
+function renderPackLabelTable() {
+  const tbody = document.getElementById('pack-label-tbody');
+  if (!tbody) return;
+  const statusMap = { '已列印': 'badge-green', '待列印': 'badge-orange' };
+  tbody.innerHTML = DEMO_DATA.packLabel.map(l => `
+    <tr>
+      <td style="font-family:monospace;font-size:12px">${l.barcode}</td>
+      <td style="font-weight:500">${l.name}</td>
+      <td>${l.type}</td>
+      <td style="text-align:center">${l.printQty}</td>
+      <td>${l.printer}</td>
+      <td>${l.operator}</td>
+      <td>${l.printTime}</td>
+      <td><span class="badge ${statusMap[l.status] || 'badge-gray'}">${l.status}</span></td>
+      <td>
+        ${l.status === '待列印'
+          ? `<button class="btn btn-primary btn-sm" onclick="printLabel('${l.id}')">列印標籤</button>`
+          : `<button class="btn btn-outline btn-sm" onclick="printLabel('${l.id}')">重新列印</button>`}
+      </td>
+    </tr>`).join('');
+}
+
+function printLabel(id) {
+  const item = DEMO_DATA.packLabel.find(l => l.id === id);
+  if (!item) return;
+  item.status = '已列印';
+  item.printTime = new Date().toLocaleString('zh-TW', { hour12: false }).slice(0, 16);
+  item.operator = DEMO_DATA.user.name;
+  renderPackLabelTable();
+  showToast(`標籤列印完成：${item.name} × ${item.printQty} 張`);
+}
+
+function printSelectedLabels(btn) {
+  const pending = DEMO_DATA.packLabel.filter(l => l.status === '待列印');
+  if (!pending.length) { showToast('目前沒有待列印的標籤', 'success'); return; }
+  const origInner = btn.innerHTML;
+  btn.innerHTML = '<div class="spinner"></div> 列印中';
+  btn.classList.add('btn-loading');
+  setTimeout(() => {
+    btn.innerHTML = origInner;
+    btn.classList.remove('btn-loading');
+    const now = new Date().toLocaleString('zh-TW', { hour12: false }).slice(0, 16);
+    pending.forEach(l => { l.status = '已列印'; l.printTime = now; l.operator = DEMO_DATA.user.name; });
+    renderPackLabelTable();
+    showToast(`已列印 ${pending.length} 筆待列印標籤`);
+  }, 800);
+}
+
+// ====== PACK CART ======
+function renderPackCartGrid() {
+  const grid = document.getElementById('pack-cart-grid');
+  if (!grid) return;
+  const statusConfig = {
+    '已就緒': { cls: 'badge-green', dot: '#10B981' },
+    '備車中': { cls: 'badge-orange', dot: '#F59E0B' },
+    '未備車': { cls: 'badge-gray', dot: '#94A3B8' }
+  };
+  grid.innerHTML = DEMO_DATA.packCart.map(c => {
+    const cfg = statusConfig[c.status] || { cls: 'badge-gray', dot: '#94A3B8' };
+    return `
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+          <div style="font-weight:600;font-size:14px">${c.name}</div>
+          <span class="badge ${cfg.cls}">${c.status}</span>
+        </div>
+        <div style="padding:16px 20px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+            <div><div style="font-size:11px;color:var(--text-secondary);margin-bottom:2px">手術室</div><div style="font-size:13px;font-weight:500">${c.assignedOR}</div></div>
+            <div><div style="font-size:11px;color:var(--text-secondary);margin-bottom:2px">手術時間</div><div style="font-size:13px;font-weight:500">${c.surgeryTime.slice(11)}</div></div>
+            <div><div style="font-size:11px;color:var(--text-secondary);margin-bottom:2px">盤包數量</div><div style="font-size:13px;font-weight:500">${c.packageCount} 包</div></div>
+            <div><div style="font-size:11px;color:var(--text-secondary);margin-bottom:2px">器械數量</div><div style="font-size:13px;font-weight:500">${c.instrumentCount} 件</div></div>
+          </div>
+          <div style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;background:var(--bg);padding:8px 10px;border-radius:6px">
+            <span style="font-weight:500;color:var(--text)">手術術式：</span>${c.surgery}
+          </div>
+          <div style="display:flex;gap:8px">
+            ${c.status === '未備車' ? `<button class="btn btn-primary btn-sm" style="flex:1" onclick="startCart('${c.id}')">開始備車</button>` : ''}
+            ${c.status === '備車中' ? `<button class="btn btn-success btn-sm" style="flex:1" onclick="completeCart('${c.id}')">確認備車完成</button>` : ''}
+            ${c.status === '已就緒' ? `<button class="btn btn-outline btn-sm" style="flex:1">查看備車清單</button>` : ''}
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function startCart(id) {
+  const cart = DEMO_DATA.packCart.find(c => c.id === id);
+  if (!cart) return;
+  cart.status = '備車中';
+  cart.preparedBy = DEMO_DATA.user.name;
+  renderPackCartGrid();
+  showToast(`${cart.name} 開始備車`);
+}
+
+function completeCart(id) {
+  const cart = DEMO_DATA.packCart.find(c => c.id === id);
+  if (!cart) return;
+  cart.status = '已就緒';
+  cart.prepareTime = new Date().toLocaleString('zh-TW', { hour12: false }).slice(0, 16);
+  renderPackCartGrid();
+  showToast(`${cart.name} 備車完成，已就緒`);
 }
 
 // Load Chart.js on startup

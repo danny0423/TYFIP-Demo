@@ -170,6 +170,71 @@ const DEMO_DATA = {
     { id: 'SC-20260423-08', batchId: 'ST-20260423-08', machine: '滅菌鍋 #2', packageCount: 4, endTime: '—', inspector: '—', chemIndicator: '—', bioIndicator: '—', status: '進行中' }
   ],
 
+  storage: [
+    { id: 'STK-001', barcode: 'TK-20260420-001', name: '腹腔鏡手術盤包', location: 'A-01-03', qty: 4, expireDate: '2026/10/20', nearExpire: false, expired: false, sterileMethod: '高壓蒸氣' },
+    { id: 'STK-002', barcode: 'TK-20260420-002', name: '骨科膝關節置換盤包', location: 'A-02-01', qty: 2, expireDate: '2026/04/30', nearExpire: true, expired: false, sterileMethod: '高壓蒸氣' },
+    { id: 'STK-003', barcode: 'TK-20260418-003', name: '心臟外科體外循環盤包', location: 'B-01-02', qty: 1, expireDate: '2026/04/25', nearExpire: true, expired: false, sterileMethod: 'E.O.' },
+    { id: 'STK-004', barcode: 'TK-20260415-004', name: '婦科腹腔鏡盤包', location: 'A-03-05', qty: 3, expireDate: '2026/04/22', nearExpire: false, expired: true, sterileMethod: '高壓蒸氣' },
+    { id: 'STK-005', barcode: 'TK-20260421-005', name: '神經外科顱腦手術盤包', location: 'B-02-04', qty: 2, expireDate: '2026/11/21', nearExpire: false, expired: false, sterileMethod: 'E.O.' },
+    { id: 'STK-006', barcode: 'TK-20260422-006', name: '泌尿科膀胱鏡盤包', location: 'A-01-07', qty: 5, expireDate: '2026/10/22', nearExpire: false, expired: false, sterileMethod: '高壓蒸氣' },
+    { id: 'STK-007', barcode: 'TK-20260419-007', name: '眼科白內障盤包', location: 'C-01-01', qty: 3, expireDate: '2026/05/01', nearExpire: true, expired: false, sterileMethod: '高壓蒸氣' },
+    { id: 'STK-008', barcode: 'TK-20260416-008', name: '小兒外科腸道盤包', location: 'C-02-03', qty: 1, expireDate: '2026/04/23', nearExpire: false, expired: true, sterileMethod: '高壓蒸氣' }
+  ],
+
+  stockout: [
+    { id: 'OUT-20260423-01', barcode: 'TK-20260420-001', name: '腹腔鏡手術盤包', dest: 'B棟手術室 OR-3', requester: '李志強', requestTime: '2026/04/23 07:30', outTime: '2026/04/23 08:00', receiver: '林護理師', status: '撥補完成' },
+    { id: 'OUT-20260423-02', barcode: 'TK-20260421-005', name: '神經外科顱腦手術盤包', dest: 'B棟手術室 OR-1', requester: '張醫師', requestTime: '2026/04/23 08:00', outTime: '2026/04/23 08:45', receiver: '—', status: '撥補中' },
+    { id: 'OUT-20260423-03', barcode: 'TK-20260420-002', name: '骨科膝關節置換盤包', dest: 'C棟手術室 OR-2', requester: '王護理師', requestTime: '2026/04/23 09:00', outTime: '2026/04/23 09:30', receiver: '陳助理', status: '撥補完成' },
+    { id: 'OUT-20260423-04', barcode: 'TK-20260422-006', name: '泌尿科膀胱鏡盤包', dest: '內視鏡室', requester: '劉醫師', requestTime: '2026/04/23 10:00', outTime: '—', receiver: '—', status: '撥補中' },
+    { id: 'OUT-20260423-05', barcode: 'TK-20260419-007', name: '眼科白內障盤包', dest: 'C棟手術室 OR-4', requester: '陳護理師', requestTime: '2026/04/23 11:00', outTime: '2026/04/23 11:30', receiver: '黃助理', status: '轉移完成' },
+    { id: 'OUT-20260423-06', barcode: 'TK-20260421-005', name: '婦科腹腔鏡盤包', dest: 'B棟手術室 OR-5', requester: '林醫師', requestTime: '2026/04/23 13:00', outTime: '—', receiver: '—', status: '撥補中' }
+  ],
+
+  damage: [
+    { id: 'DMG-20260423-01', instrumentName: '腹腔鏡鏡頭', barcode: 'INS-001-2023', type: '損壞', desc: '鏡頭鍍膜脫落，影像模糊', reporter: '林小芳', reportTime: '2026/04/23 09:00', status: '待審核' },
+    { id: 'DMG-20260422-01', instrumentName: 'Trocar 套管 10mm', barcode: 'INS-003-2023', type: '損壞', desc: '密封墊圈老化破損，無法維持氣密', reporter: '陳美玲', reportTime: '2026/04/22 14:30', status: '報修中' },
+    { id: 'DMG-20260421-01', instrumentName: '骨科電鑽主機', barcode: 'INS-102-2023', type: '遺失', desc: '手術後盤點發現缺少，已通知手術室清查', reporter: '張志豪', reportTime: '2026/04/21 17:00', status: '調查中' },
+    { id: 'DMG-20260420-01', instrumentName: '心臟剪刀', barcode: 'INS-201-2023', type: '損壞', desc: '刀刃缺口，無法正常切割', reporter: '王美麗', reportTime: '2026/04/20 10:00', status: '已報廢' },
+    { id: 'DMG-20260419-01', instrumentName: '腹腔鏡抓鉗', barcode: 'INS-004-2023', type: '損壞', desc: '鉗爪變形，夾持力不足', reporter: '李志強', reportTime: '2026/04/19 15:30', status: '維修完成' }
+  ],
+
+  reportWash: [
+    { id: 'W2026042201', time: '2026/04/22 08:00', type: '腹腔鏡器械組', count: 10, machine: '清洗機 #1', operator: '林小芳', temp: '85°C', duration: '42分鐘', atpResult: '合格', status: '已完成' },
+    { id: 'W2026042202', time: '2026/04/22 09:30', type: '骨科器械組', count: 15, machine: '清洗機 #2', operator: '陳美玲', temp: '93°C', duration: '38分鐘', atpResult: '合格', status: '已完成' },
+    { id: 'W2026042203', time: '2026/04/22 11:00', type: '心臟外科器械組', count: 22, machine: '清洗機 #1', operator: '張志豪', temp: '85°C', duration: '45分鐘', atpResult: '不合格', status: '異常' },
+    { id: 'W2026042301', time: '2026/04/23 08:30', type: '腹腔鏡器械組', count: 12, machine: '清洗機 #1', operator: '林小芳', temp: '85°C', duration: '40分鐘', atpResult: '合格', status: '已完成' },
+    { id: 'W2026042302', time: '2026/04/23 09:00', type: '骨科器械組', count: 18, machine: '清洗機 #3', operator: '王美麗', temp: '93°C', duration: '36分鐘', atpResult: '合格', status: '已完成' },
+    { id: 'W2026042303', time: '2026/04/23 10:20', type: '婦科器械組', count: 9, machine: '清洗機 #2', operator: '陳美玲', temp: '85°C', duration: '41分鐘', atpResult: '合格', status: '已完成' },
+    { id: 'W2026042304', time: '2026/04/23 12:00', type: '神經外科器械組', count: 28, machine: '清洗機 #1', operator: '李志強', temp: '93°C', duration: '50分鐘', atpResult: '合格', status: '已完成' },
+    { id: 'W2026042305', time: '2026/04/23 14:00', type: '眼科器械組', count: 6, machine: '清洗機 #2', operator: '王美麗', temp: '85°C', duration: '35分鐘', atpResult: '合格', status: '已完成' }
+  ],
+
+  reportSterilize: [
+    { id: 'ST-20260422-01', machine: '滅菌鍋 #1', method: '高壓蒸氣', temp: '134°C', pressure: '2.1 bar', duration: '45分鐘', packageCount: 7, startTime: '2026/04/22 07:00', endTime: '2026/04/22 07:45', operator: '張美玲', chemIndicator: '合格', bioIndicator: '合格', status: '通過' },
+    { id: 'ST-20260422-02', machine: '滅菌鍋 #2', method: 'E.O.', temp: '55°C', pressure: '0.6 bar', duration: '240分鐘', packageCount: 3, startTime: '2026/04/22 08:00', endTime: '2026/04/22 12:00', operator: '陳美玲', chemIndicator: '合格', bioIndicator: '合格', status: '通過' },
+    { id: 'ST-20260422-03', machine: '滅菌鍋 #3', method: '高壓蒸氣', temp: '121°C', pressure: '1.8 bar', duration: '60分鐘', packageCount: 11, startTime: '2026/04/22 09:30', endTime: '2026/04/22 10:30', operator: '林小芳', chemIndicator: '不合格', bioIndicator: '不合格', status: '不合格' },
+    { id: 'ST-20260423-01', machine: '滅菌鍋 #1', method: '高壓蒸氣', temp: '134°C', pressure: '2.1 bar', duration: '45分鐘', packageCount: 8, startTime: '2026/04/23 07:00', endTime: '2026/04/23 07:45', operator: '張美玲', chemIndicator: '合格', bioIndicator: '合格', status: '通過' },
+    { id: 'ST-20260423-02', machine: '滅菌鍋 #2', method: '高壓蒸氣', temp: '134°C', pressure: '2.1 bar', duration: '45分鐘', packageCount: 6, startTime: '2026/04/23 08:30', endTime: '2026/04/23 09:15', operator: '陳美玲', chemIndicator: '合格', bioIndicator: '待判讀', status: '待檢驗' },
+    { id: 'ST-20260423-04', machine: '滅菌鍋 #1', method: '高壓蒸氣', temp: '134°C', pressure: '2.1 bar', duration: '45分鐘', packageCount: 7, startTime: '2026/04/23 10:00', endTime: '2026/04/23 10:45', operator: '張美玲', chemIndicator: '合格', bioIndicator: '合格', status: '通過' },
+    { id: 'ST-20260423-06', machine: '滅菌鍋 #2', method: '高壓蒸氣', temp: '134°C', pressure: '2.1 bar', duration: '45分鐘', packageCount: 5, startTime: '2026/04/23 11:00', endTime: '2026/04/23 11:45', operator: '張志豪', chemIndicator: '合格', bioIndicator: '合格', status: '通過' }
+  ],
+
+  packLabel: [
+    { id: 'LBL-20260423-001', name: '腹腔鏡手術盤包', barcode: 'TK-20260423-007', type: '腹腔鏡器械組', printQty: 3, printTime: '2026/04/23 07:00', operator: '林小芳', printer: 'Zebra ZT411', status: '已列印' },
+    { id: 'LBL-20260423-002', name: '骨科膝關節置換盤包', barcode: 'TK-20260423-008', type: '骨科器械組', printQty: 2, printTime: '2026/04/23 07:30', operator: '陳美玲', printer: 'Zebra ZT411', status: '已列印' },
+    { id: 'LBL-20260423-003', name: '心臟外科體外循環盤包', barcode: 'TK-20260423-009', type: '心臟外科器械組', printQty: 1, printTime: '—', operator: '張志豪', printer: 'TSC TTP-344M', status: '待列印' },
+    { id: 'LBL-20260423-004', name: '婦科腹腔鏡盤包', barcode: 'TK-20260423-010', type: '婦科器械組', printQty: 4, printTime: '2026/04/23 09:00', operator: '王美麗', printer: 'Zebra ZT411', status: '已列印' },
+    { id: 'LBL-20260423-005', name: '神經外科顱腦手術盤包', barcode: 'TK-20260423-011', type: '神經外科器械組', printQty: 2, printTime: '—', operator: '—', printer: 'TSC TTP-344M', status: '待列印' }
+  ],
+
+  packCart: [
+    { id: 'CART-001', name: '手術備車 A', assignedOR: 'B棟 OR-1', packageCount: 5, instrumentCount: 42, preparedBy: '林小芳', prepareTime: '2026/04/23 06:30', surgery: '腦部腫瘤切除術', surgeryTime: '2026/04/23 08:00', status: '已就緒' },
+    { id: 'CART-002', name: '手術備車 B', assignedOR: 'B棟 OR-3', packageCount: 3, instrumentCount: 28, preparedBy: '陳美玲', prepareTime: '2026/04/23 07:00', surgery: '腹腔鏡膽囊切除術', surgeryTime: '2026/04/23 09:30', status: '已就緒' },
+    { id: 'CART-003', name: '手術備車 C', assignedOR: 'C棟 OR-2', packageCount: 4, instrumentCount: 35, preparedBy: '張志豪', prepareTime: '—', surgery: '膝關節置換術', surgeryTime: '2026/04/23 10:00', status: '備車中' },
+    { id: 'CART-004', name: '手術備車 D', assignedOR: 'C棟 OR-4', packageCount: 2, instrumentCount: 18, preparedBy: '—', prepareTime: '—', surgery: '白內障超乳手術', surgeryTime: '2026/04/23 13:00', status: '未備車' },
+    { id: 'CART-005', name: '手術備車 E', assignedOR: 'B棟 OR-5', packageCount: 6, instrumentCount: 55, preparedBy: '王美麗', prepareTime: '2026/04/23 07:45', surgery: '心臟繞道手術', surgeryTime: '2026/04/23 14:00', status: '已就緒' }
+  ],
+
   instrumentHistory: [
     { time: '2026/04/20 09:15', event: '送洗', desc: '由 林小芳 登記送洗，批次 W2026042001', type: 'wash', icon: 'droplets' },
     { time: '2026/04/20 11:30', event: '清洗完成', desc: '清洗機 #1，歷時 40 分鐘，水溫 85°C', type: 'wash_done', icon: 'check-circle' },
