@@ -104,6 +104,7 @@ function initApp() {
   renderWashTable();
   renderSterilizerCards();
   renderSterilizeBatches();
+  renderPackManageTable();
   initCharts();
 }
 
@@ -591,6 +592,128 @@ function showToast(msg, type = 'success') {
     toast.style.animation = 'toastOut 0.3s ease forwards';
     setTimeout(() => toast.remove(), 300);
   }, 3000);
+}
+
+// ====== PACK MANAGE ======
+let currentPackBatch = null;
+
+function renderPackManageTable() {
+  const keyword = (document.getElementById('pack-search')?.value || '').trim().toLowerCase();
+  const status = document.getElementById('pack-status')?.value || '';
+  const tbody = document.getElementById('pack-manage-tbody');
+  if (!tbody) return;
+
+  const data = DEMO_DATA.packManage.filter(p => {
+    const matchKw = !keyword || p.name.toLowerCase().includes(keyword) || p.barcode.toLowerCase().includes(keyword);
+    const matchSt = !status || p.status === status;
+    return matchKw && matchSt;
+  });
+
+  if (!data.length) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--text-secondary);padding:32px">查無符合條件的盤包記錄</td></tr>';
+    return;
+  }
+
+  const statusMap = { '待包配': 'badge-orange', '包配中': 'badge-blue', '已完成': 'badge-green' };
+  tbody.innerHTML = data.map(p => {
+    const checked = p.instruments.filter(i => i.checked).length;
+    const total = p.instruments.length;
+    const progress = Math.round(checked / total * 100);
+    return `
+      <tr>
+        <td style="font-family:monospace;font-size:12px">${p.barcode}</td>
+        <td style="font-weight:500">${p.name}</td>
+        <td>${p.type}</td>
+        <td>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span>${p.instrumentCount} 件</span>
+            ${p.status !== '待包配' ? `<div style="flex:1;height:4px;background:var(--border);border-radius:2px;min-width:60px"><div style="width:${progress}%;height:100%;background:var(--accent);border-radius:2px"></div></div><span style="font-size:11px;color:var(--text-secondary)">${checked}/${total}</span>` : ''}
+          </div>
+        </td>
+        <td>${p.operator}</td>
+        <td>${p.startTime}</td>
+        <td><span class="badge ${statusMap[p.status] || 'badge-gray'}">${p.status}</span></td>
+        <td>
+          <button class="btn btn-outline btn-sm" onclick="openPackModal('${p.id}')">查看詳情</button>
+          ${p.status !== '已完成' ? `<button class="btn btn-primary btn-sm" style="margin-left:6px" onclick="openPackModal('${p.id}')">繼續包配</button>` : ''}
+        </td>
+      </tr>`;
+  }).join('');
+}
+
+function searchPackWithLoading(btn) {
+  const origInner = btn.innerHTML;
+  btn.innerHTML = '<div class="spinner"></div> 搜尋中';
+  btn.classList.add('btn-loading');
+  setTimeout(() => {
+    btn.innerHTML = origInner;
+    btn.classList.remove('btn-loading');
+    renderPackManageTable();
+  }, 500);
+}
+
+function openPackModal(id) {
+  const pack = DEMO_DATA.packManage.find(p => p.id === id);
+  if (!pack) return;
+  currentPackBatch = pack;
+
+  document.getElementById('pack-modal-title').textContent = pack.name;
+
+  const statusMap = { '待包配': 'badge-orange', '包配中': 'badge-blue', '已完成': 'badge-green' };
+  document.getElementById('pack-modal-info').innerHTML = `
+    <div style="flex:1">
+      <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px">盤包條碼</div>
+      <div style="font-size:13px;font-weight:500;font-family:monospace">${pack.barcode}</div>
+    </div>
+    <div style="flex:1">
+      <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px">操作人員</div>
+      <div style="font-size:13px;font-weight:500">${pack.operator}</div>
+    </div>
+    <div style="flex:1">
+      <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px">器械總數</div>
+      <div style="font-size:13px;font-weight:500">${pack.instrumentCount} 件</div>
+    </div>
+    <div>
+      <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px">狀態</div>
+      <span class="badge ${statusMap[pack.status] || 'badge-gray'}">${pack.status}</span>
+    </div>`;
+
+  document.getElementById('pack-modal-instruments').innerHTML = pack.instruments.map(inst => `
+    <tr>
+      <td style="font-weight:500">${inst.name}</td>
+      <td style="font-family:monospace;font-size:12px">${inst.barcode}</td>
+      <td><span class="badge ${inst.checked ? 'badge-green' : 'badge-orange'}">${inst.checked ? '已清點' : '待清點'}</span></td>
+    </tr>`).join('');
+
+  const doneTag = document.getElementById('pack-modal-done-tag');
+  const confirmBtn = document.getElementById('pack-confirm-btn');
+  if (pack.status === '已完成') {
+    doneTag.innerHTML = '<span class="badge badge-green" style="font-size:13px;padding:6px 14px">✓ 已完成包配</span>';
+    confirmBtn.style.display = 'none';
+  } else {
+    doneTag.innerHTML = '';
+    confirmBtn.style.display = '';
+  }
+
+  document.getElementById('pack-detail-modal').classList.add('active');
+}
+
+function closePackModal(event) {
+  if (event.target === document.getElementById('pack-detail-modal')) {
+    document.getElementById('pack-detail-modal').classList.remove('active');
+  }
+}
+
+function confirmPack() {
+  if (!currentPackBatch) return;
+  currentPackBatch.status = '已完成';
+  currentPackBatch.instruments.forEach(i => i.checked = true);
+  DEMO_DATA.dashboard.kpi.package = Math.max(0, DEMO_DATA.dashboard.kpi.package - 1);
+  DEMO_DATA.dashboard.kpi.sterilizer += 1;
+  document.getElementById('pack-detail-modal').classList.remove('active');
+  showToast('盤包包配完成，已進入待滅菌佇列');
+  renderPackManageTable();
+  renderKPI();
 }
 
 // Load Chart.js on startup

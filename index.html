@@ -444,19 +444,32 @@
         </div>
 
         <div class="page-section" id="page-pack-manage">
-          <div class="page-header"><div class="page-title">盤包包配管理</div><div class="page-subtitle">管理各類手術盤包的器械組合配置</div></div>
-          <div class="card"><div class="coming-soon-wrap">
-            <div class="coming-soon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></div>
-            <div class="coming-soon-title">盤包包配管理模組</div>
-            <div class="coming-soon-desc">依手術類型設定標準盤包配置，確保每次包配的器械種類與數量正確。</div>
-            <div class="coming-soon-features">
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>手術盤包樣板管理</div>
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>器械數量異常警示</div>
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>包配人員電子簽核</div>
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>條碼掃描確認清點</div>
+          <div class="page-header">
+            <div><div class="page-title">盤包包配管理</div><div class="page-subtitle">管理各類手術盤包的器械組合配置</div></div>
+          </div>
+          <div class="search-bar">
+            <input class="form-input" id="pack-search" placeholder="搜尋盤包名稱、條碼..." style="width:260px">
+            <select class="select-input" id="pack-status">
+              <option value="">全部狀態</option>
+              <option value="待包配">待包配</option>
+              <option value="包配中">包配中</option>
+              <option value="已完成">已完成</option>
+            </select>
+            <button class="btn btn-primary btn-sm" onclick="searchPackWithLoading(this)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              搜尋
+            </button>
+          </div>
+          <div class="card" style="margin-top:16px">
+            <div class="card-body" style="padding:0">
+              <table class="data-table">
+                <thead><tr>
+                  <th>盤包條碼</th><th>盤包名稱</th><th>器械類型</th><th>器械數量</th><th>操作人員</th><th>開始時間</th><th>狀態</th><th>操作</th>
+                </tr></thead>
+                <tbody id="pack-manage-tbody"></tbody>
+              </table>
             </div>
-            <div class="coming-soon-eta"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>預計 Q3 2026 上線</div>
-          </div></div>
+          </div>
         </div>
 
         <div class="page-section" id="page-pack-cart">
@@ -608,6 +621,32 @@
 </div>
 
 <!-- TOAST -->
+<div class="modal-overlay" id="pack-detail-modal" onclick="closePackModal(event)">
+  <div class="modal" style="max-width:620px">
+    <div class="modal-header">
+      <div class="modal-title" id="pack-modal-title">盤包包配詳情</div>
+      <button class="modal-close" onclick="document.getElementById('pack-detail-modal').classList.remove('active')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div id="pack-modal-info" style="display:flex;gap:24px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)"></div>
+      <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px">器械清點清單</div>
+      <table class="data-table">
+        <thead><tr><th>器械名稱</th><th>條碼</th><th>狀態</th></tr></thead>
+        <tbody id="pack-modal-instruments"></tbody>
+      </table>
+    </div>
+    <div class="modal-footer">
+      <div id="pack-modal-done-tag"></div>
+      <div style="display:flex;gap:8px;margin-left:auto">
+        <button class="btn btn-outline" onclick="document.getElementById('pack-detail-modal').classList.remove('active')">關閉</button>
+        <button class="btn btn-success" id="pack-confirm-btn" onclick="confirmPack()">確認完成包配</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="toast-container" id="toast-container"></div>
 
 <script src="data.js"></script>

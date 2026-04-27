@@ -116,6 +116,49 @@ const DEMO_DATA = {
     { id: 'ST-20260423-08', machine: '滅菌鍋 #2', packageCount: 4, startTime: '2026/04/23 14:00', endTime: '—', status: '進行中' }
   ],
 
+  packManage: [
+    { id: 'PK-20260423-01', name: '腹腔鏡手術盤包', barcode: 'TK-20260423-001', type: '腹腔鏡器械組', instrumentCount: 12, operator: '陳美玲', startTime: '2026/04/23 08:50', status: '包配中',
+      instruments: [
+        { name: '腹腔鏡鏡頭', barcode: 'INS-001-2023', required: true, checked: true },
+        { name: 'Trocar 套管 5mm', barcode: 'INS-002-2023', required: true, checked: true },
+        { name: 'Trocar 套管 10mm', barcode: 'INS-003-2023', required: true, checked: false },
+        { name: '抓鉗', barcode: 'INS-004-2023', required: true, checked: true },
+        { name: '電燒棒', barcode: 'INS-005-2023', required: true, checked: false }
+      ]
+    },
+    { id: 'PK-20260423-02', name: '骨科膝關節置換盤包', barcode: 'TK-20260423-002', type: '骨科器械組', instrumentCount: 18, operator: '林小芳', startTime: '2026/04/23 09:20', status: '已完成',
+      instruments: [
+        { name: '骨鑿', barcode: 'INS-101-2023', required: true, checked: true },
+        { name: '骨鎚', barcode: 'INS-102-2023', required: true, checked: true },
+        { name: '骨鋸', barcode: 'INS-103-2023', required: true, checked: true }
+      ]
+    },
+    { id: 'PK-20260423-03', name: '心臟外科體外循環盤包', barcode: 'TK-20260423-003', type: '心臟外科器械組', instrumentCount: 25, operator: '張志豪', startTime: '2026/04/23 10:00', status: '待包配',
+      instruments: [
+        { name: '心臟剪刀', barcode: 'INS-201-2023', required: true, checked: false },
+        { name: '血管鉗', barcode: 'INS-202-2023', required: true, checked: false }
+      ]
+    },
+    { id: 'PK-20260423-04', name: '婦科腹腔鏡盤包', barcode: 'TK-20260423-004', type: '婦科器械組', instrumentCount: 10, operator: '王美麗', startTime: '2026/04/23 11:30', status: '已完成',
+      instruments: [
+        { name: '子宮操作器', barcode: 'INS-301-2023', required: true, checked: true },
+        { name: '舉宮器', barcode: 'INS-302-2023', required: true, checked: true }
+      ]
+    },
+    { id: 'PK-20260423-05', name: '神經外科顱腦手術盤包', barcode: 'TK-20260423-005', type: '神經外科器械組', instrumentCount: 30, operator: '李志強', startTime: '2026/04/23 13:00', status: '待包配',
+      instruments: [
+        { name: '顱骨鑽', barcode: 'INS-401-2023', required: true, checked: false },
+        { name: '腦膜剪', barcode: 'INS-402-2023', required: true, checked: false }
+      ]
+    },
+    { id: 'PK-20260423-06', name: '泌尿科膀胱鏡盤包', barcode: 'TK-20260423-006', type: '泌尿科器械組', instrumentCount: 8, operator: '陳美玲', startTime: '2026/04/23 14:20', status: '包配中',
+      instruments: [
+        { name: '膀胱鏡', barcode: 'INS-501-2023', required: true, checked: true },
+        { name: '活檢鉗', barcode: 'INS-502-2023', required: true, checked: false }
+      ]
+    }
+  ],
+
   instrumentHistory: [
     { time: '2026/04/20 09:15', event: '送洗', desc: '由 林小芳 登記送洗，批次 W2026042001', type: 'wash', icon: 'droplets' },
     { time: '2026/04/20 11:30', event: '清洗完成', desc: '清洗機 #1，歷時 40 分鐘，水溫 85°C', type: 'wash_done', icon: 'check-circle' },
