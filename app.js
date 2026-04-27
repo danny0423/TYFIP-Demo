@@ -105,6 +105,7 @@ function initApp() {
   renderSterilizerCards();
   renderSterilizeBatches();
   renderPackManageTable();
+  renderSterilizeCheck();
   initCharts();
 }
 
@@ -714,6 +715,76 @@ function confirmPack() {
   showToast('盤包包配完成，已進入待滅菌佇列');
   renderPackManageTable();
   renderKPI();
+}
+
+// ====== STERILIZE CHECK ======
+function renderSterilizeCheck() {
+  const status = document.getElementById('check-status')?.value || '';
+  const machine = document.getElementById('check-machine')?.value || '';
+  const tbody = document.getElementById('sterilize-check-tbody');
+  if (!tbody) return;
+
+  const data = DEMO_DATA.sterilizeCheck.filter(r => {
+    const matchSt = !status || r.status === status;
+    const matchMc = !machine || r.machine === machine;
+    return matchSt && matchMc;
+  });
+
+  if (!data.length) {
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text-secondary);padding:32px">查無符合條件的檢驗記錄</td></tr>';
+    return;
+  }
+
+  const statusMap = { '通過': 'badge-green', '待檢驗': 'badge-orange', '不合格': 'badge-red', '進行中': 'badge-blue' };
+  const indicatorBadge = v => {
+    if (v === '合格') return '<span class="badge badge-green">合格</span>';
+    if (v === '不合格') return '<span class="badge badge-red">不合格</span>';
+    if (v === '待判讀') return '<span class="badge badge-orange">待判讀</span>';
+    return `<span style="color:var(--text-secondary)">${v}</span>`;
+  };
+
+  tbody.innerHTML = data.map(r => `
+    <tr>
+      <td style="font-family:monospace;font-size:12px">${r.batchId}</td>
+      <td>${r.machine}</td>
+      <td style="text-align:center">${r.packageCount}</td>
+      <td>${r.endTime}</td>
+      <td>${r.inspector}</td>
+      <td style="text-align:center">${indicatorBadge(r.chemIndicator)}</td>
+      <td style="text-align:center">${indicatorBadge(r.bioIndicator)}</td>
+      <td><span class="badge ${statusMap[r.status] || 'badge-gray'}">${r.status}</span></td>
+      <td>
+        ${r.status === '待檢驗' ? `<button class="btn btn-primary btn-sm" onclick="confirmSterilizeCheck('${r.id}')">登錄檢驗結果</button>` : ''}
+        ${r.status === '不合格' ? `<button class="btn btn-sm" style="background:#FEF2F2;color:var(--danger);border:1px solid #FECACA">查看異常處置</button>` : ''}
+        ${r.status === '通過' ? `<button class="btn btn-outline btn-sm">查看報告</button>` : ''}
+        ${r.status === '進行中' ? `<span style="color:var(--text-secondary);font-size:12px">滅菌進行中</span>` : ''}
+      </td>
+    </tr>`).join('');
+}
+
+function searchCheckWithLoading(btn) {
+  const origInner = btn.innerHTML;
+  btn.innerHTML = '<div class="spinner"></div> 篩選中';
+  btn.classList.add('btn-loading');
+  setTimeout(() => {
+    btn.innerHTML = origInner;
+    btn.classList.remove('btn-loading');
+    renderSterilizeCheck();
+  }, 500);
+}
+
+function confirmSterilizeCheck(id) {
+  const record = DEMO_DATA.sterilizeCheck.find(r => r.id === id);
+  if (!record) return;
+  record.chemIndicator = '合格';
+  record.bioIndicator = '合格';
+  record.status = '通過';
+  record.inspector = DEMO_DATA.user.name;
+  DEMO_DATA.dashboard.kpi.inspect = Math.max(0, DEMO_DATA.dashboard.kpi.inspect - 1);
+  DEMO_DATA.dashboard.kpi.stockIn += 1;
+  renderSterilizeCheck();
+  renderKPI();
+  showToast('滅菌後檢驗結果已登錄，批次通過，已進入待入庫佇列');
 }
 
 // Load Chart.js on startup

@@ -159,6 +159,17 @@ const DEMO_DATA = {
     }
   ],
 
+  sterilizeCheck: [
+    { id: 'SC-20260423-01', batchId: 'ST-20260423-01', machine: '滅菌鍋 #1', packageCount: 8, endTime: '2026/04/23 07:45', inspector: '張美玲', chemIndicator: '合格', bioIndicator: '合格', status: '通過' },
+    { id: 'SC-20260423-02', batchId: 'ST-20260423-02', machine: '滅菌鍋 #2', packageCount: 6, endTime: '2026/04/23 09:15', inspector: '陳美玲', chemIndicator: '合格', bioIndicator: '待判讀', status: '待檢驗' },
+    { id: 'SC-20260423-03', batchId: 'ST-20260423-03', machine: '滅菌鍋 #3', packageCount: 10, endTime: '2026/04/23 09:50', inspector: '林小芳', chemIndicator: '不合格', bioIndicator: '不合格', status: '不合格' },
+    { id: 'SC-20260423-04', batchId: 'ST-20260423-04', machine: '滅菌鍋 #1', packageCount: 7, endTime: '2026/04/23 10:45', inspector: '王美麗', chemIndicator: '合格', bioIndicator: '合格', status: '通過' },
+    { id: 'SC-20260423-05', batchId: 'ST-20260423-05', machine: '滅菌鍋 #1', packageCount: 9, endTime: '—', inspector: '—', chemIndicator: '—', bioIndicator: '—', status: '進行中' },
+    { id: 'SC-20260423-06', batchId: 'ST-20260423-06', machine: '滅菌鍋 #2', packageCount: 5, endTime: '2026/04/23 11:45', inspector: '張志豪', chemIndicator: '合格', bioIndicator: '合格', status: '通過' },
+    { id: 'SC-20260423-07', batchId: 'ST-20260423-07', machine: '滅菌鍋 #3', packageCount: 12, endTime: '2026/04/23 13:20', inspector: '—', chemIndicator: '—', bioIndicator: '—', status: '待檢驗' },
+    { id: 'SC-20260423-08', batchId: 'ST-20260423-08', machine: '滅菌鍋 #2', packageCount: 4, endTime: '—', inspector: '—', chemIndicator: '—', bioIndicator: '—', status: '進行中' }
+  ],
+
   instrumentHistory: [
     { time: '2026/04/20 09:15', event: '送洗', desc: '由 林小芳 登記送洗，批次 W2026042001', type: 'wash', icon: 'droplets' },
     { time: '2026/04/20 11:30', event: '清洗完成', desc: '清洗機 #1，歷時 40 分鐘，水溫 85°C', type: 'wash_done', icon: 'check-circle' },

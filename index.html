@@ -488,19 +488,38 @@
         </div>
 
         <div class="page-section" id="page-sterilize-check">
-          <div class="page-header"><div class="page-title">滅菌後檢驗管理</div><div class="page-subtitle">記錄化學及生物指示劑檢驗結果</div></div>
-          <div class="card"><div class="coming-soon-wrap">
-            <div class="coming-soon-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v11m0 0H5m4 0h10m-10 0a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2m0-11v11"/></svg></div>
-            <div class="coming-soon-title">滅菌後檢驗管理模組</div>
-            <div class="coming-soon-desc">系統化記錄每批次滅菌的化學指示劑與生物指示劑檢驗結果，確保滅菌品質符合法規要求。</div>
-            <div class="coming-soon-features">
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>化學 / 生物指示劑結果登錄</div>
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>不合格批次自動攔截</div>
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>檢驗報告電子存檔</div>
-              <div class="coming-soon-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>稽核追蹤與法規報表</div>
+          <div class="page-header">
+            <div><div class="page-title">滅菌後檢驗管理</div><div class="page-subtitle">記錄化學及生物指示劑檢驗結果</div></div>
+          </div>
+          <div class="search-bar">
+            <select class="select-input" id="check-status">
+              <option value="">全部狀態</option>
+              <option value="待檢驗">待檢驗</option>
+              <option value="通過">通過</option>
+              <option value="不合格">不合格</option>
+              <option value="進行中">進行中</option>
+            </select>
+            <select class="select-input" id="check-machine">
+              <option value="">全部滅菌鍋</option>
+              <option value="滅菌鍋 #1">滅菌鍋 #1</option>
+              <option value="滅菌鍋 #2">滅菌鍋 #2</option>
+              <option value="滅菌鍋 #3">滅菌鍋 #3</option>
+            </select>
+            <button class="btn btn-primary btn-sm" onclick="searchCheckWithLoading(this)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              篩選
+            </button>
+          </div>
+          <div class="card" style="margin-top:16px">
+            <div class="card-body" style="padding:0">
+              <table class="data-table">
+                <thead><tr>
+                  <th>批次編號</th><th>滅菌鍋</th><th>盤包數</th><th>結束時間</th><th>檢驗人員</th><th>化學指示劑</th><th>生物指示劑</th><th>狀態</th><th>操作</th>
+                </tr></thead>
+                <tbody id="sterilize-check-tbody"></tbody>
+              </table>
             </div>
-            <div class="coming-soon-eta"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>預計 Q3 2026 上線</div>
-          </div></div>
+          </div>
         </div>
 
         <div class="page-section" id="page-storage">
